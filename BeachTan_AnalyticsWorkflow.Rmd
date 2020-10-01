@@ -1,0 +1,52 @@
+---
+title: "BeachTan Inc. Analytics Workflow"
+author: "Abby Farrell"
+date: "October 2, 2020"
+output: html_document
+code_folding: hide
+---
+
+The goal of the following analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's likelihood of spending money in upgrade revenue within the company. I am performaning an analysis on the customer data provided by Beach Tan to explain any correlation to upgrade revenue found.
+
+# 1 Loading & Cleaning Data
+
+The chunk below includes installing packages needed for the following analysis, as well as any recoding done to ensure accurate results. The output shows a summary of the variables after the data has been prepped, as well as a plot introducing the data.
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r echo=FALSE}
+library(pacman)
+p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot)
+setwd("/Users/abbyfarrell/Documents/ISA 616/Beach Tan Project Files")
+df<-read.csv("BeachTan.csv", stringsAsFactors = TRUE)
+
+#recode as factors
+df$UIDStoreLocation <- as.factor(df$UIDStoreLocation)
+df$MembershipType <- as.factor(df$MembershipType)
+df$MembershipLevel <- as.factor(df$MembershipLevel)
+levels(df$MembershipType) <-c('Non Membership', 'Monthly Membership', 'Annual Membership')
+levels(df$MembershipLevel) <-c('Non Membership', 'Fast', 'Faster', 'Fastest', 'Instant')
+df$Gender = fct_recode(df$Gender, 'Missing' = "", 'Missing' = "#NULL!")
+
+summary(df)
+plot_intro (df)
+```
+
+# 2 Correlation
+
+As seen above, we have a relatively straight-forward data set with no missing values. This will allow us to now examine any correlation between the given variables (first integers, then factors) and the upgrade revenue specifically.
+
+```{r echo=FALSE}
+#Find correlation in variables
+correlation <- unlist(lapply(df, is.numeric))
+dfcorr<-df[,correlation]
+M<-cor(dfcorr, use = "complete.obs")
+corrplot(M, method='circle')
+
+plot(df$UpgradeRevenue, df$MembershipType)
+plot(df$UpgradeRevenue, df$MembershipLevel)
+plot(df$UpgradeRevenue, df$Gender)
+plot(df$UpgradeRevenue, df$UIDStoreLocation)
+```
+There are a couple observations we can make from the graphs above. 
