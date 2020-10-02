@@ -12,18 +12,18 @@ output:
     toc_float: yes
 ---
 
-The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's likelihood of spending money in upgrade revenue. I am performing an analysis on the customer data provided by Beach Tan to explain any correlation to upgrade revenue found.
+The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's spending in upgrade revenue. I am performing an analysis on the customer data provided by Beach Tan to show any correlation to upgrade revenue found. The changes tracked throughout the analysis can be found on the public GitHub repository at this link <https://github.com/abbyfarrell>, which includes the code in a .Rmd file as well as this HTML document.
 
 # Loading & Describing Data
 
-The beginning code chunk includes installing all packages needed for the analysis in one step, as well as any recoding done to ensure accurate results. The output below shows a summary of the variables after the data has been prepped, as well as a plot introducing the data.
+The beginning code chunk includes installing all packages needed for the analysis in one step, as well as any recoding done to ensure accurate results. The output below shows a summary of the variables after the data has been prepped, as well as a plot introducing the data. The only variable that was changed is Gender, as any customer who did not have a given value for gender was coded as "Missing". These values were kept in the data set for analysis.
 
 ```{r setup, results='asis', echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-```{r echo=FALSE}
+```{r}
 library(pacman)
-p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot, knitr)
+p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot, knitr, ggplot2)
 setwd("/Users/abbyfarrell/Documents/GitHub/BeachTanAnalysis")
 df<-read.csv("BeachTan.csv", stringsAsFactors = TRUE)
 
@@ -39,11 +39,11 @@ str(df)
 plot_intro (df)
 ```
 
-# Plotting Correlations {.tabset .tabset-pills}
+# Plotting the Variables {.tabset .tabset-pills}
 
-We can see that we have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as tabs for four different scatter plots of the factor variables against upgrade revenue.
+We can see that we have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as tabs for four different scatter plots and distribution graphs of the factor variables.
 
-```{r echo=FALSE}
+```{r}
 #Find correlation in variables
 correlation <- unlist(lapply(df, is.numeric)) 
 dfcorr<-df[,correlation]
@@ -52,27 +52,49 @@ corrplot(M, method='circle')
 ```
 
 ## Plot
-```{r echo=FALSE}
+```{r}
 plot(df$UpgradeRevenue, df$MembershipType, main="Membership Type vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Membership Type", col="red")
+plot(df$MembershipType)
 ```
 
 ## Plot
-```{r echo=FALSE}
+```{r}
 plot(df$UpgradeRevenue, df$MembershipLevel, main="Membership Level vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Membership Level", col="blue")
+plot(df$MembershipLevel)
 ```
 
 ## Plot
-```{r echo=FALSE}
+```{r}
 plot(df$UpgradeRevenue, df$Gender, main="Gender vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Gender", col="green")
+plot(df$Gender)
 ```
 
 ## Plot
-```{r echo=FALSE}
+```{r}
 plot(df$UpgradeRevenue, df$UIDStoreLocation, main="Store Location vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Store Location", col="orange")
+plot(df$UIDStoreLocation)
 ```
 
-# Analyzing Correlations
+# Analyzing Correlations {.tabset .tabset-pills}
 
-There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with UV Tans (Sunless Tans second). The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue.
+There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with the number of UV Tans (Sunless Tans second). The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue. Now, we can take a closer look at these variables that seem to have the greatest correlation to confirm our findings.
+
+## UV Tans
+```{r}
+ggplot(data = df) +
+  geom_point(mapping = aes(x = UpgradeRevenue, y = UVTans))
+```
+
+## Membership Level
+```{r}
+ggplot(data = df, mapping = aes(x = UpgradeRevenue)) + 
+  geom_freqpoly(mapping = aes(colour = MembershipLevel), binwidth = 500)
+```
+
+## Membership Type
+```{r}
+ggplot(data = df, mapping = aes(x = UpgradeRevenue)) + 
+  geom_freqpoly(mapping = aes(colour = MembershipType), binwidth = 500)
+```
 
 # Conclusion
