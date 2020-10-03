@@ -12,7 +12,7 @@ output:
     toc_float: yes
 ---
 
-The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's spending in upgrade revenue. I am performing an analysis on the customer data provided by Beach Tan to show any correlation to upgrade revenue found. The changes tracked throughout the analysis can be found on the public GitHub repository at this link <https://github.com/abbyfarrell>, which includes the code in a .Rmd file as well as this HTML document.
+The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's spending in upgrade revenue. I am performing an analysis on the customer data provided by Beach Tan to show any correlation to upgrade revenue found. The code used throughout this document can be hidden or shown through the option in the upper right-hand corner. The changes tracked throughout the analysis can be found on the public GitHub repository at this link <https://github.com/abbyfarrell/BeachTanAnalysis>, which includes the code in a .Rmd file as well as this HTML document.
 
 # Loading & Describing Data
 
@@ -41,7 +41,7 @@ plot_intro (df)
 
 # Plotting the Variables {.tabset .tabset-pills}
 
-We can see that we have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as tabs for four different scatter plots and distribution graphs of the factor variables.
+We can see that we now have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as tabs for four different scatter plots and distribution graphs of the factor variables.
 
 ```{r}
 #Find correlation in variables
@@ -77,7 +77,7 @@ plot(df$UIDStoreLocation)
 
 # Analyzing Correlations {.tabset .tabset-pills}
 
-There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with the number of UV Tans (Sunless Tans second). The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue. Now, we can take a closer look at these variables that seem to have the greatest correlation to confirm our findings.
+There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with the number of UV Tans. The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue. Now we can take a closer look at the variables that have the greatest correlation to upgrade revenue to confirm our findings, shown in the tabs below.
 
 ## UV Tans
 ```{r}
@@ -98,3 +98,5 @@ ggplot(data = df, mapping = aes(x = UpgradeRevenue)) +
 ```
 
 # Conclusion
+
+From analyzing at the graphs above, the conclusion that we can draw for the Beach Tan Marketing Team is that the customers with the highest number of UV Tans who have no membership yet should be targeted for upgrades. The lower the membership level and type, the more upgrade revenue the customer is likely to contribute to the company. This is shown through the correlation of these variables and the frequency at which they occur in Beach Tan's customer base. If the existing customers of the company meet this criteria, they can be sent promotions and advertisements to push them towards upgrading within Beach Tan. This will increase revenue and customer loyalty for the company, as well as encourage more customers to upgrade within Beach Tan in the future.
