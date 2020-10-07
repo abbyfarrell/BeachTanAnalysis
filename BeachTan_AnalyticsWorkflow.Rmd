@@ -12,11 +12,13 @@ output:
     toc_float: yes
 ---
 
-The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's spending in upgrade revenue. I am performing an analysis on the customer data provided by Beach Tan to show any correlation to upgrade revenue found. The code used throughout this document can be hidden or shown through the option in the upper right-hand corner. The changes tracked throughout the analysis can be found on the public GitHub repository at this link <https://github.com/abbyfarrell/BeachTanAnalysis>, which includes the code in a .Rmd file as well as this HTML document.
+The goal of the following exploratory data analysis is to aid the Marketing Team of Beach Tan Inc. in understanding factors that contribute to a customer's spending in upgrade revenue. In a Business Value Proposition previously presented to the team, this solution was pitched as one that would easily allow the team to identify trends leading to a customer spending money in upgrades.  
+
+I am performing an analysis on the customer data provided by Beach Tan to show and document any correlation to upgrade revenue found. The code used throughout this document can be hidden or shown through the option in the upper right-hand corner. The changes tracked throughout this analysis can be found on the public GitHub repository at this link <https://github.com/abbyfarrell/BeachTanAnalysis>, which includes all the files needed for reproducibility.
 
 # Loading & Describing Data
 
-The beginning code chunk includes installing all packages needed for the analysis in one step, as well as any recoding done to ensure accurate results. The output below shows a summary of the variables after the data has been prepped, as well as a plot introducing the data. The only variable that was changed is Gender, as any customer who did not have a given value for gender was coded as "Missing". These values were kept in the data set for analysis.
+The beginning code chunk includes installing all packages needed for the analysis in one step, as well as reading in the data. The R Package Pacman was used to install all the necessary packages in one step.
 
 ```{r setup, results='asis', echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -25,7 +27,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(pacman)
 p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot, knitr, ggplot2)
 df<-read.csv("BeachTan.csv", stringsAsFactors = TRUE)
+```
 
+Next, some of the variables must be recoded in order to ensure accurate results. This includes making sure every variable that is a factor is coded as one. The only variable that had the raw data changed is Gender, where any customer who did not have a given value for gender was coded as "Missing". These values were kept in the data set for analysis. The output below shows a summary of the variables after the data has been prepped, as well as a plot introducing the data.
+
+```{r}
 #recode as factors
 df$UIDStoreLocation <- as.factor(df$UIDStoreLocation)
 df$MembershipType <- as.factor(df$MembershipType)
@@ -40,7 +46,7 @@ plot_intro (df)
 
 # Plotting the Variables {.tabset .tabset-pills}
 
-We can see that we now have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as tabs for four different scatter plots and distribution graphs of the factor variables.
+We can see that we now have a relatively straight-forward data set with no missing values. This will allow us to examine any correlation between the given variables and upgrade revenue specifically. A correlation map of the numeric variables is shown below, as well as four tabs for different scatter plots and distribution graphs of the factor variables.
 
 ```{r}
 #Find correlation in variables
@@ -50,33 +56,33 @@ M<-cor(dfcorr, use = "complete.obs")
 corrplot(M, method='circle')
 ```
 
-## Plot
+## Membership Type
 ```{r}
 plot(df$UpgradeRevenue, df$MembershipType, main="Membership Type vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Membership Type", col="red")
-plot(df$MembershipType)
+plot(df$MembershipType, main = "Membership Type Distribution")
 ```
 
-## Plot
+## Membership Level
 ```{r}
 plot(df$UpgradeRevenue, df$MembershipLevel, main="Membership Level vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Membership Level", col="blue")
-plot(df$MembershipLevel)
+plot(df$MembershipLevel, main = "Membership Level Distribution")
 ```
 
-## Plot
+## Gender
 ```{r}
 plot(df$UpgradeRevenue, df$Gender, main="Gender vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Gender", col="green")
-plot(df$Gender)
+plot(df$Gender, main = "Gender Distribution")
 ```
 
-## Plot
+## Store Location
 ```{r}
 plot(df$UpgradeRevenue, df$UIDStoreLocation, main="Store Location vs. Upgrade Rev", xlab = "Upgrade Revenue", ylab= "Store Location", col="orange")
-plot(df$UIDStoreLocation)
+plot(df$UIDStoreLocation, main = "Store Location Distribution")
 ```
 
 # Analyzing Correlations {.tabset .tabset-pills}
 
-There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with the number of UV Tans. The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue. Now we can take a closer look at the variables that have the greatest correlation to upgrade revenue to confirm our findings, shown in the tabs below.
+There are a couple observations we can make from the graphs above. First, looking at the correlation plot of numeric variables we can see that upgrade revenue has the strongest correlation with the number of UV Tans. The scatter plots showing the different factors against our target variable tells us which membership type and level contributed most to upgrade revenue. Now we can take a closer look at the variables that have the greatest correlation to upgrade revenue to confirm our findings, shown in the graphs in the seperate tabs below.
 
 ## UV Tans
 ```{r}
@@ -98,4 +104,23 @@ ggplot(data = df, mapping = aes(x = UpgradeRevenue)) +
 
 # Conclusion
 
-From analyzing the graphs above, the conclusion that we can draw for the Beach Tan Marketing Team is that the customers with the highest number of UV Tans who have no membership yet should be targeted for upgrades. The lower the membership level and type, the more upgrade revenue the customer is likely to contribute to the company. This is shown through the correlation of these variables and the frequency at which they occur in Beach Tan's customer base. If the existing customers of the company meet this criteria, they can be sent promotions and advertisements to push them towards upgrading within Beach Tan. This will increase revenue and customer loyalty for the company overall, as well as encourage more customers to upgrade within Beach Tan in the future.
+From analyzing the graphs above, we can assume that customers with an increasing number of UV Tans who have no membership yet should be targeted for upgrades. The lower the membership level and type, the more upgrade revenue the customer is likely to contribute to the company. In order to examine these three predictors at a higher level, we will create a model using multiple linear regression. The summary of the model, including the intercepts and significant codes, is shown below.
+
+```{r}
+fitmodel <- lm(UpgradeRevenue ~ UVTans + MembershipLevel + MembershipType, data=df)
+summary(fitmodel)
+```
+
+From looking the model, we can see that three of these variables are significant when it comes to upgrade revenue. With all else held constant:
+
+* As the number of UV Tans a customer receives increases by 1, there is a $0.40 increase associated with that customer's estimated upgrade revenue.
+* Customers with the fast membership level are associated with a $13.10 estimated increase in upgrade revenue.
+* Customers with an annual membership are associated with a $12.99 estimated _decrease_ in upgrade revenue. This negative relationship could be due to the fact that this is already the highest membership level offered by Beach Tan, meaning these customers can not upgrade any more.
+
+Looking at the ANOVA table below gives us a more condensed output of our model. This, most importantly, shows us the sum of squares as well as the F-value for our variables. From this table we can see that for upgrade revenue, all of these variables are significant in estimating a customer's likelihood to upgrade.
+
+```{r}
+anova(fitmodel)
+```
+
+The conclusion that can be drawn for the Beach Tan Marketing Team is that customers should be pushed to increase their number of UV Tans as well as to upgrade to the fast membership level. Any existing customers of the company who have not yet met this criteria can be sent promotions and advertisements to encourage them to upgrade within Beach Tan. This will increase revenue and customer loyalty for the company overall, as well as encourage more customers to continue to upgrade within Beach Tan in the future.
