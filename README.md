@@ -5,4 +5,4 @@ The goal of the following exploratory data analysis is to aid the Marketing Team
 
 # Instructions
 
-In order to reproduce the analysis done for the Beach Tan Marketing Team, the R project file can be downloaded from this repository and ran through R Studio. The project file has all necessary documents included. Any code can then be edited and/or reproduced in the R Markdown file.
+In order to reproduce the analysis done for the Beach Tan Marketing Team, the R project file can be downloaded from this repository and ran through R Studio. The project file has all necessary documents included in it. Any code from the .Rmd can then be edited and/or reproduced through the R Markdown file.
