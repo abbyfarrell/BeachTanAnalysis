@@ -2883,7 +2883,6 @@ div.tocify {
 <p>The beginning code chunk includes installing all packages needed for the analysis in one step, as well as any recoding done to ensure accurate results. The output below shows a summary of the variables after the data has been prepped, as well as a plot introducing the data. The only variable that was changed is Gender, as any customer who did not have a given value for gender was coded as “Missing”. These values were kept in the data set for analysis.</p>
 <pre class="r"><code>library(pacman)
 p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot, knitr, ggplot2)
-setwd(&quot;/Users/abbyfarrell/Documents/GitHub/BeachTanAnalysis&quot;)
 df&lt;-read.csv(&quot;BeachTan.csv&quot;, stringsAsFactors = TRUE)
 
 #recode as factors

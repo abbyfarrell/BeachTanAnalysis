@@ -24,7 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(pacman)
 p_load(tidyverse, dplyr, plyr, DataExplorer, corrplot, knitr, ggplot2)
-setwd("/Users/abbyfarrell/Documents/GitHub/BeachTanAnalysis")
 df<-read.csv("BeachTan.csv", stringsAsFactors = TRUE)
 
 #recode as factors
